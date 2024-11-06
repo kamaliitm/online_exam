@@ -1,0 +1,15 @@
+{
+  "name": "online_exam",
+  "version": "1.0.0",
+  "description": "Online examination web application. Manage MCQs and Descriptive questions through the APIs. Candidates get random questions during the examination.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
