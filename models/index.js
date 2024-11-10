@@ -24,11 +24,20 @@ DescriptiveQuestion.belongsTo(Examiner, {
     foreignKey: 'updatedBy', as: 'DescriptiveQuestionUpdater',
 });
 
+sequelize.sync()
+  .then(() => {
+    console.log('Database & tables created!');
+  })
+  .catch((error) => {
+    console.error('Error syncing database:', error);
+  });
+
 const db = {
     sequelize,
     Sequelize,
-    User,
-    Post,
+    Examiner,
+    Mcq,
+    DescriptiveQuestion,
   };
   
   module.exports = db;
