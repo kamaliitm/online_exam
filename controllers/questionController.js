@@ -9,3 +9,12 @@ exports.createQuestion = async (req, res) => {
         res.status(500).json({ error: 'failed to create question' });
     }
 };
+
+exports.getExam = async (req, res) => {
+    try {
+        const result = await questionService.getExam();
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: 'failed to get exam' });
+    }
+}

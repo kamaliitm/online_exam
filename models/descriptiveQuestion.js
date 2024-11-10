@@ -7,7 +7,7 @@ const DescriptiveQuestion = sequelize.define('DescriptiveQuestion', {
         allowNull: false,
     },
     answer: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     }
 });
 

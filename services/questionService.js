@@ -1,6 +1,6 @@
-const { Mcq, DescriptiveQuestion } = require("../models");
-const { QUESTION_TYPE_MCQ } = require('./constants');
-
+const { createMcq, createDescriptionQuestion, getRandomElemsFromArr } = require('./helper');
+const { QUESTION_TYPE_MCQ, NO_OF_QUESTIONS } = require('./constants');
+const { Mcq, DescriptiveQuestion } = require('../models');
 
 exports.createQuestion = async (questionDet) => {
     
@@ -25,7 +25,7 @@ exports.createQuestion = async (questionDet) => {
             questionId = mcq.id;
         } else {
             const descQuestion = await createDescriptionQuestion(questionDet);
-            questionId = descQuestion;
+            questionId = descQuestion.id;
         }
         
         return {
@@ -43,24 +43,31 @@ exports.createQuestion = async (questionDet) => {
             "message": "error creating the question",
         };
     }
-}
+};
 
-createMcq = (questionDet) => {
+exports.getExam = async () => {
     try {
-        const mcq = Mcq.create(questionDet);
-        return mcq;
+        const mcqs = await Mcq.findAll();
+        const chosenMcqs = getRandomElemsFromArr(mcqs, NO_OF_QUESTIONS);
+
+        const descriptive = await DescriptiveQuestion.findAll();
+        const chosendescriptive = getRandomElemsFromArr(descriptive, NO_OF_QUESTIONS);
+
+        return {
+            "status": "success",
+            "message": "exam questions retrieved",
+            "data": {
+                "mcqs": chosenMcqs,
+                "descriptive": chosendescriptive,
+            },
+        };
     } catch (err) {
         console.error(err);
-        throw new Error('error creating the mcq');
+        return {
+            "status": "error",
+            "message": "error fetching questions for the exam",
+            "data": null,
+        };
     }
-}
+};
 
-createDescriptionQuestion = (questionDet) => {
-    try {
-        const question = DescriptiveQuestion.create(questionDet);
-        return question;
-    } catch (err) {
-        console.error(err);
-        throw new Error('error creating the descriptive question');
-    }
-}
