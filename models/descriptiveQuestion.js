@@ -8,6 +8,9 @@ const DescriptiveQuestion = sequelize.define('DescriptiveQuestion', {
     },
     answer: {
         type: DataTypes.TEXT,
+    },
+    imageName: {
+        type: DataTypes.STRING,
     }
 });
 

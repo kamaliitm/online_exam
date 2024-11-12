@@ -2,7 +2,7 @@ const { createMcq, createDescriptionQuestion, getRandomElemsFromArr } = require(
 const { QUESTION_TYPE_MCQ, NO_OF_QUESTIONS } = require('./constants');
 const { Mcq, DescriptiveQuestion } = require('../models');
 
-exports.createQuestion = async (questionDet) => {
+exports.createQuestion = async (questionDet, file) => {
     
     console.log("creation question method: ", questionDet);
 
@@ -24,7 +24,7 @@ exports.createQuestion = async (questionDet) => {
             const mcq = await createMcq(questionDet);
             questionId = mcq.id;
         } else {
-            const descQuestion = await createDescriptionQuestion(questionDet);
+            const descQuestion = await createDescriptionQuestion(questionDet, file);
             questionId = descQuestion.id;
         }
         
@@ -45,13 +45,22 @@ exports.createQuestion = async (questionDet) => {
     }
 };
 
-exports.getExam = async () => {
+exports.getExam = async (req) => {
     try {
         const mcqs = await Mcq.findAll();
         const chosenMcqs = getRandomElemsFromArr(mcqs, NO_OF_QUESTIONS);
 
         const descriptive = await DescriptiveQuestion.findAll();
-        const chosendescriptive = getRandomElemsFromArr(descriptive, NO_OF_QUESTIONS);
+        let chosendescriptive = getRandomElemsFromArr(descriptive, NO_OF_QUESTIONS);
+        chosendescriptive = chosendescriptive.map(desc => {
+            const descData = desc.get({ plain: true });  // Convert to plain object
+            return {
+                ...descData,
+                imageUrl: descData.imageName ? `${req.protocol}://${req.get('host')}/uploads/${descData.id}/${descData.imageName}` : null,
+            };
+        });
+
+        console.log("chosenDescriptive: ", chosendescriptive);
 
         return {
             "status": "success",

@@ -1,1 +1,3 @@
 node_modules/
+/uploads/**/*   # Ignore all contents within 'uploads'
+!/uploads/.gitkeep   # But keep the .gitkeep file

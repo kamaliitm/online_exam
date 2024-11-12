@@ -1,4 +1,5 @@
 const { Mcq, DescriptiveQuestion } = require("../models");
+const { saveFile } = require('../store/objectStore/localFileSystem');
 
 exports.createMcq = async (questionDet) => {
     try {
@@ -8,17 +9,29 @@ exports.createMcq = async (questionDet) => {
         console.error(err);
         throw new Error('error creating the mcq');
     }
-}
+};
 
-exports.createDescriptionQuestion = async (questionDet) => {
+exports.createDescriptionQuestion = async (questionDet, file) => {
     try {
+
+        if (file) {
+            questionDet.imageName = file.originalname;
+        }
         const question = await DescriptiveQuestion.create(questionDet);
+
+        let questionImage = null;
+        if (file) {
+            questionImage = await saveFile(question.id, file);
+            console.log("uploaded the image successfully!");
+        }
+        
         return question;
+
     } catch (err) {
         console.error(err);
         throw new Error('error creating the descriptive question');
     }
-}
+};
 
 exports.getRandomElemsFromArr = (arr, limit) => {
     const n = arr.length;
@@ -31,4 +44,4 @@ exports.getRandomElemsFromArr = (arr, limit) => {
     }
 
     return chosenElems;
-}
+};
